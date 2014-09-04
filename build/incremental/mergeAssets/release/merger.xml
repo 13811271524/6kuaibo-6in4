@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merger>
+
+    <dataSet config="main" >
+        <source path="D:\workspace\6kuaibo-6in4\assets" >
+            <file
+                name="minivpn.armeabi"
+                path="D:\workspace\6kuaibo-6in4\assets\minivpn.armeabi" />
+            <file
+                name="minivpn.armeabi-v7a"
+                path="D:\workspace\6kuaibo-6in4\assets\minivpn.armeabi-v7a" />
+            <file
+                name="minivpn.mips"
+                path="D:\workspace\6kuaibo-6in4\assets\minivpn.mips" />
+            <file
+                name="minivpn.x86"
+                path="D:\workspace\6kuaibo-6in4\assets\minivpn.x86" />
+            <file
+                name="6kuaibo-6in4.ovpn"
+                path="D:\workspace\6kuaibo-6in4\assets\6kuaibo-6in4.ovpn" />
+        </source>
+    </dataSet>
+    <dataSet config="release" >
+        <source path="D:\workspace\6kuaibo-6in4\src\release\assets" />
+    </dataSet>
+
+</merger>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+     >
+
+    <TextView
+        android:id="@+id/void2"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp" />
+
+    <EditText
+        android:id="@+id/username"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/void2"
+        android:layout_marginTop="4dp"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
+        android:layout_marginBottom="4dp"
+        android:hint="@string/auth_username"
+        android:inputType="textEmailAddress"
+         />
+
+     <EditText
+            android:id="@+id/password"
+            android:inputType="textPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp"
+            android:layout_marginBottom="4dp"
+            android:hint="@string/password"
+            android:layout_below="@id/username"
+            />
+     <CheckBox
+            android:id="@+id/save_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginLeft="50dp"
+            android:text="保存密码"
+            android:layout_marginRight="50dp"
+            android:layout_marginBottom="16dp"
+            android:layout_below="@id/password"/>
+
+     <Button
+         android:id="@+id/ok_connect"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_below="@id/save_password"
+         android:layout_marginLeft="50dp"
+         android:text="连接" />
+
+     <Button
+         android:id="@+id/ok_register"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_alignRight="@+id/save_password"
+         android:layout_below="@id/save_password"
+         android:text="注册" />
+
+</RelativeLayout>

@@ -1,0 +1,3 @@
+<?xml version="1.0"?>
+<Openvpn><openvpnVersion>1</openvpnVersion><apk>0.1</apk><config>3</config><openvpn.apk downloadPath="http://update.6kuaibo.com/mobile/update4/apk/6kuaibo-android-6in4-0.2.apk">1</openvpn.apk><vpn6kuaibo.ovpn downloadPath="http://update.6kuaibo.com/update/config/6kuaibo.ovpn" filePath="config\6kuaibo.ovpn">3</vpn6kuaibo.ovpn><ca.crt downloadPath="http://update.6kuaibo.com/update/config/ca.crt" filePath="config\ca.crt">3</ca.crt></Openvpn>
+

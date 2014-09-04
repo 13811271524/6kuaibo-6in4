@@ -1,0 +1,19 @@
+client
+dev tun
+proto udp6
+topology subnet
+resolv-retry infinite
+nobind
+persist-key
+persist-tun
+auth-user-pass
+ca ./ca.crt
+ns-cert-type server
+cipher none
+comp-lzo
+route-method exe
+route-delay 2
+verb 3
+tun-ipv6
+#ifconfig-ipv6 fec0:aaaa::5/64 fec0:aaaa::1
+mute 20

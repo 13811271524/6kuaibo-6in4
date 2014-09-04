@@ -1,0 +1,99 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="1" android:versionName="0.1" package="de.blinkt.kuaibo4">
+
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <!-- <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
+
+    <!-- <uses-permission android:name="com.android.vending.BILLING" /> -->
+
+    <uses-sdk android:minSdkVersion="14" android:targetSdkVersion="18"/>
+
+    <!-- Copy the <permission> block to your app when using the REMOTE API. Otherwise OpenVPN for
+        Android needs to be installed first -->
+
+    <application android:allowBackup="true" android:icon="@drawable/icon" android:label="@string/app" android:supportsRtl="true">
+        <activity android:name="de.blinkt.kuaibo4.VPNPreferences" android:windowSoftInputMode="stateHidden"/>
+        <activity android:allowTaskReparenting="true" android:label="6kuaibo 6in4" android:launchMode="singleTask" android:name="de.blinkt.kuaibo4.LogWindow"/>
+        <activity android:name="de.blinkt.kuaibo4.FileSelect"/>
+        <activity android:name="de.blinkt.kuaibo4.MainActivity" android:uiOptions="splitActionBarWhenNarrow" xmlns:tools="http://schemas.android.com/tools" tools:ignore="ExportedActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+
+        <service android:name="de.blinkt.kuaibo4.core.OpenVpnService" android:permission="android.permission.BIND_VPN_SERVICE">
+            <intent-filter>
+                <action android:name="android.net.VpnService"/>
+            </intent-filter>
+        </service>
+
+
+        <receiver android:name="de.blinkt.kuaibo4.OnBootReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+        </receiver>
+
+        <activity android:label="Convert Config File" android:name="de.blinkt.kuaibo4.ConfigConverter" android:uiOptions="splitActionBarWhenNarrow" xmlns:tools="http://schemas.android.com/tools" tools:ignore="ExportedActivity">
+            <intent-filter android:label="@string/import_config">
+                <action android:name="android.intent.action.VIEW"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+
+                <data android:mimeType="application/x-openvpn-profile"/>
+            </intent-filter>
+            <intent-filter android:label="@string/import_config">
+                <action android:name="android.intent.action.VIEW"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+
+                <data android:mimeType="application/ovpn"/>
+            </intent-filter>
+            <intent-filter android:label="@string/import_config">
+
+                <!-- http://stackoverflow.com/questions/7030832/associating-certain-file-extension-to-my-android-application/7102838#7102838 -->
+                <action android:name="android.intent.action.VIEW"/>
+
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+
+                <data android:mimeType="*/*"/>
+                <data android:scheme="file"/>
+                <data android:host="*"/>
+                <data android:port="*"/>
+                <data android:pathPattern=".*..*..*..*..*.ovpn"/>
+                <data android:pathPattern=".*..*..*..*.ovpn"/>
+                <data android:pathPattern=".*..*..*.ovpn"/>
+                <data android:pathPattern=".*..*.ovpn"/>
+                <data android:pathPattern=".*.ovpn"/>
+            </intent-filter>
+        </activity>
+        <activity android:label="@string/vpn_launch_title" android:name="de.blinkt.kuaibo4.LaunchVPN" xmlns:tools="http://schemas.android.com/tools" tools:ignore="ExportedActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+
+        <provider android:authorities="de.blinkt.kuaibo4.FileProvider" android:exported="true" android:grantUriPermissions="true" android:name="de.blinkt.kuaibo4.FileProvider" xmlns:tools="http://schemas.android.com/tools" tools:ignore="ExportedContentProvider"/>
+
+        <!--
+        <receiver android:name="core.GetRestrictionReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.GET_RESTRICTION_ENTRIES" />
+            </intent-filter>
+        </receiver>
+        -->
+    </application>
+
+</manifest>

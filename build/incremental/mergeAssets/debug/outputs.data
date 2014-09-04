@@ -1,0 +1,8 @@
+# incremental data. DO NOT EDIT.
+# format is <lastModified> <length> <SHA-1> <path>
+# Encoding is UTF-8
+1397018015154 5144 0df1b3f609ea5bec960e686d44a98aab1291f844 D:\workspace\6kuaibo-6in4\build\assets\debug\minivpn.armeabi
+1398658206506 1562 768c38b83e18a2ac98764b5f8a9990837d2f55f9 D:\workspace\6kuaibo-6in4\build\assets\debug\6kuaibo-6in4.ovpn
+1397018015155 4976 96a04b3c235926edd6ba5f2701475313dd678899 D:\workspace\6kuaibo-6in4\build\assets\debug\minivpn.x86
+1397018015156 5372 568e0ad4bc6d148aa84f1b57f57a6dca67cdb954 D:\workspace\6kuaibo-6in4\build\assets\debug\minivpn.mips
+1397018015155 5148 c1295972cb5e144a3ad0965387bb7f9719b4f6b9 D:\workspace\6kuaibo-6in4\build\assets\debug\minivpn.armeabi-v7a

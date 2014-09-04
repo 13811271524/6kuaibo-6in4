@@ -1,0 +1,164 @@
+package de.blinkt.openvpn;
+
+import de.blinkt.openvpn.core.OpenVpnService;
+import de.blinkt.openvpn.core.ProfileManager;
+import de.blinkt.openvpn.core.OpenVpnService.LocalBinder;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
+import android.app.ListActivity;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.ServiceConnection;
+import android.os.Bundle;
+import android.os.IBinder;
+import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.View.OnKeyListener;
+import android.view.Window;
+import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
+import android.widget.Button;
+
+public class SuccessScreen extends Activity{
+	protected OpenVpnService mService;
+	//private Button   breakdown;
+	private WebView  webView;
+	private static Context mContext = null;
+	private ServiceConnection mConnection = new ServiceConnection() {
+		@Override
+		public void onServiceConnected(ComponentName className,
+				IBinder service) {
+			// We've bound to LocalService, cast the IBinder and get LocalService instance
+			LocalBinder binder = (LocalBinder) service;
+			mService = binder.getService();
+		}
+
+		@Override
+		public void onServiceDisconnected(ComponentName arg0) {
+			mService =null;
+		}
+	};
+	
+    @Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+
+		requestWindowFeature(Window.FEATURE_PROGRESS);
+		setContentView(R.layout.success);
+		
+        //breakdown   = (Button)   findViewById(R.id.breakdown);
+        webView  = (WebView)  findViewById(R.id.webView);
+        mContext = this;
+        
+        webView.loadUrl("http://www.6kuaibo.com");
+        WebSettings ws = webView.getSettings();
+        webView.getSettings().setSupportZoom(true);
+        webView.getSettings().setDefaultZoom(WebSettings.ZoomDensity.FAR);  
+        webView.getSettings().setBuiltInZoomControls(true);
+        
+        webView.setWebViewClient(new WebViewClient(){
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+             view.loadUrl(url);   //在当前的webview中跳转到新的url
+             //editText.setText(view.getUrl().toString());
+             return true;
+            }
+           });
+        
+        webView.setWebChromeClient(new WebChromeClient() {  
+            public void onProgressChanged(WebView view, int progress) {  
+                // Activity和Webview根据加载程度决定进度条的进度大小  
+                // 当加载到100%的时候 进度条自动消失  
+            	SuccessScreen.this.setProgress(progress * 100);  
+            }  
+        });
+    }
+    
+    @Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if(item.getItemId()==R.id.cancel){
+			dialog_Exit();
+            return true;
+        }else if(item.getItemId() == android.R.id.home) {
+			// This is called when the Home (Up) button is pressed
+			// in the Action Bar.
+			Intent parentActivityIntent = new Intent(this, MainActivity.class);
+			parentActivityIntent.addFlags(
+					Intent.FLAG_ACTIVITY_CLEAR_TOP |
+					Intent.FLAG_ACTIVITY_NEW_TASK);
+			startActivity(parentActivityIntent);
+			finish();
+			return true;
+
+		}
+		return super.onOptionsItemSelected(item);
+
+	}
+
+
+    @Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.logmenu, menu);
+		return true;
+	}
+    
+    @Override 
+    //设置回退  
+    //覆盖Activity类的onKeyDown(int keyCoder,KeyEvent event)方法  
+    public boolean onKeyDown(int keyCode, KeyEvent event) {  
+         if ((keyCode == KeyEvent.KEYCODE_BACK) && webView.canGoBack()) {  
+             webView.goBack(); //goBack()表示返回WebView的上一页面  
+             return true;  
+         }  
+         return true;  
+    } 
+    
+    public void dialog_Exit() {
+        AlertDialog.Builder builder = new Builder(this);
+        builder.setMessage("确定要断开连接吗?");
+        builder.setTitle("提示");
+        builder.setIcon(android.R.drawable.ic_dialog_alert);
+        builder.setPositiveButton("确认",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        //dialog.dismiss();
+                        System.exit(0);
+                    }
+                });
+        builder.setNegativeButton("取消",
+                new android.content.DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        builder.create().show();
+        }
+    
+    public static void NoNetwork(){
+    	AlertDialog.Builder builder = new Builder(mContext);
+    	builder.setTitle("网络已断开");
+    	builder.setPositiveButton("断开连接",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        System.exit(0);
+                    }
+                });
+        builder.setNegativeButton("等待网络恢复",
+                new android.content.DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        builder.create().show();
+    }
+}

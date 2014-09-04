@@ -1,0 +1,181 @@
+package de.blinkt.openvpn;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
+import android.app.ActionBar;
+import android.app.ActionBar.Tab;
+import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
+import android.content.Intent;
+import android.os.Environment;
+import android.os.StrictMode;
+import de.blinkt.openvpn.fragments.AboutFragment;
+import de.blinkt.openvpn.fragments.VPNProfileList;
+import de.blinkt.openvpn.util.UpdateAgent;
+
+
+public class MainActivity extends Activity {
+
+	protected void onCreate(android.os.Bundle savedInstanceState) {
+		StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectDiskReads().detectDiskWrites().detectNetwork().penaltyLog().build());
+        StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectLeakedSqlLiteObjects().penaltyLog().penaltyDeath().build());
+
+		super.onCreate(savedInstanceState);
+		ActionBar bar = getActionBar();
+		bar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+		//bar.hide();
+
+		Tab vpnListTab = bar.newTab().setText("开始6kuaibo");
+		//Tab generalTab = bar.newTab().setText(R.string.generalsettings);
+		Tab abouttab = bar.newTab().setText(R.string.about);
+		//Tab configTab = bar.newTab().setText("配置文件");
+
+		vpnListTab.setTabListener(new TabListener<VPNProfileList>("profiles", VPNProfileList.class));
+		//generalTab.setTabListener(new TabListener<GeneralSettings>("settings", GeneralSettings.class));
+		abouttab.setTabListener(new TabListener<AboutFragment>("about", AboutFragment.class));
+		//configTab.setTabListener(new TabListener<ShowConfigFragment>("config",ShowConfigFragment.class));
+		
+		bar.addTab(vpnListTab);
+		bar.addTab(abouttab);
+		//bar.addTab(configTab);
+		//bar.addTab(generalTab);
+		createSDCardDir();
+		File sdcardDir =Environment.getExternalStorageDirectory();
+        //得到一个路径，内容是sdcard的文件夹路径和名字
+          String path_o=sdcardDir.getPath()+"/6kuaibo/6kuaibo.ovpn";
+          String path_c=sdcardDir.getPath()+"/6kuaibo/ca.crt";
+          File path1 = new File(path_o);
+          File path2 = new File(path_c);
+        try {
+			InputStream ovpn = getAssets().open("6kuaibo.ovpn");
+			InputStream crt = getAssets().open("ca.crt");
+			copyFile(ovpn,path1);
+			copyFile(crt,path2);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+        UpdateAgent.checkUpdate(this);
+	}
+	
+	public static void copyFile(InputStream in, File target) {
+		  // 创建输入输出流
+		  OutputStream out = null;
+		  // 创建缓存字节流
+		  BufferedInputStream bin = null;
+		  BufferedOutputStream bout = null;
+		  try {
+			  // 创建实例
+			  out = new FileOutputStream(target);
+			  bin = new BufferedInputStream(in);
+			  bout = new BufferedOutputStream(out);
+
+			  byte[] b = new byte[8192];// 用于缓存的字节数组
+			  int len = bin.read(b);// 获取读取到的长度
+			  while (len != -1)// 判断是否读取到尾部
+			  {
+				  bout.write(b, 0, len);
+				  len = bin.read(b);
+			  }
+		  } catch (FileNotFoundException e) {
+			  e.printStackTrace();
+		  } catch (IOException e) {
+			  e.printStackTrace();
+		  } finally {
+			  try {
+				  if (bin != null) {
+					  bin.close();
+				  }
+				  if (bout != null) {
+					  bout.close();
+				  }
+			  } catch (IOException e) {
+				  e.printStackTrace();
+			  }
+		  }
+
+	  }
+	
+	public void createSDCardDir(){
+        if(Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())){
+               // 创建一个文件夹对象，赋值为外部存储器的目录
+                File sdcardDir =Environment.getExternalStorageDirectory();
+              //得到一个路径，内容是sdcard的文件夹路径和名字
+                String path=sdcardDir.getPath()+"/6kuaibo";
+                File path1 = new File(path);
+               if (!path1.exists()) {
+                //若不存在，创建目录，可以在应用启动的时候创建
+                path1.mkdir();
+              }
+               }
+        else{
+         setTitle("false");
+         return;
+       }
+       }
+
+
+	protected class TabListener<T extends Fragment> implements ActionBar.TabListener
+	{
+		private Fragment mFragment;
+		private String mTag;
+		private Class<T> mClass;
+
+
+        public TabListener(String tag, Class<T> clz) {
+            mTag = tag;
+            mClass = clz;
+
+            // Check to see if we already have a fragment for this tab, probably
+            // from a previously saved state.  If so, deactivate it, because our
+            // initial state is that a tab isn't shown.
+            mFragment = getFragmentManager().findFragmentByTag(mTag);
+            if (mFragment != null && !mFragment.isDetached()) {
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                ft.detach(mFragment);
+                ft.commit();
+            }
+        }
+      
+        public void onTabSelected(Tab tab, FragmentTransaction ft) {
+            if (mFragment == null) {
+                mFragment = Fragment.instantiate(MainActivity.this, mClass.getName());
+                ft.add(android.R.id.content, mFragment, mTag);
+            } else {
+                ft.attach(mFragment);
+            }
+        }
+
+        public void onTabUnselected(Tab tab, FragmentTransaction ft) {
+            if (mFragment != null) {
+                ft.detach(mFragment);
+            }
+        }
+
+
+		@Override
+		public void onTabReselected(Tab tab, FragmentTransaction ft) {
+
+		}
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+
+		System.out.println(data);
+
+
+	}
+
+
+}
